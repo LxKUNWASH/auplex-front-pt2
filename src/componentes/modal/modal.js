@@ -1,7 +1,4 @@
-//import { Link } from "react-router-dom";
-//import Boton from "../Boton";
 import "./modal.css"
-//<Link to="/"><Boton className="salir">Salir</Boton></Link> <Boton onClick={cerrarModal} className="continuar">Continuar</Boton>
 function Modal ({children,titulo,state,setState,boton1,boton2}){
 
 

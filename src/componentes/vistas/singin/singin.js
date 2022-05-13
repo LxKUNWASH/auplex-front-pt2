@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./singin.css";
 import Input from "../../formulario/input";
 import { Form } from "../../formulario/form";
+import {Spinner} from "../../spinner/spinner"
 import img from "../../../assets/img.jpg";
 import {
   login,
@@ -13,6 +14,9 @@ import { expresiones } from "../../../helpers/expresionesRegulares";
 import {mensajesError} from "../../../helpers/mensajes/mensajes";
 
 function Singin(props) {
+
+  const [spinner,setSpinner] = useState(false)
+
   const [administrador, setAdministrador] = useState({ nombre: "", correo: "" });
 
   const [validaciones, setValidaciones] = useState({
@@ -33,26 +37,32 @@ function Singin(props) {
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
+
+    setSpinner(!spinner)
+
     const res = await crearAdministrador(administrador);
 
     if (res.msg) {
-      alert(res.msg);
+      setSpinner(false)
+      return alert(res.msg);
     }
     if (res && documento) {
       const file = new FormData();
       file.append("documento", documento[0]);
        const doc = await actualizarImagenAdmin(file, res.id);
 
+       
+
        if(!doc){
+        setSpinner(false)
         return alert("Problema al cargar imagen")
       }
 
        if(doc.msg !== "Imagen Cargada con exito"){
+        setSpinner(false)
          return alert(doc.msg)
-
-        
     }
-    }
+  }
 
       const body = { correo: administrador.correo, contraseña: administrador.contraseña };
 
@@ -64,9 +74,9 @@ function Singin(props) {
         }
       
      
-        localStorage.setItem("Admin", acceso.administrador.id);
+        localStorage.setItem("Administrador", acceso.administrador.id);
         localStorage.setItem("Token", acceso.token);
-        window.location.replace("/usuarios");
+        window.location.replace("/admin");
     
   };
 
@@ -85,6 +95,7 @@ function Singin(props) {
         backgroundRepeat: "no-repeat",
       }}
     >
+      <Spinner state={spinner}/>
       <Form titulo="Registrate" mensaje={<Link className="link" to="/login">¿Ya estas registrado? Inicia sesion</Link>}>
           <Input
             estadoValidacion={validaciones}

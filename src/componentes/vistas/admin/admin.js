@@ -9,13 +9,13 @@ import {
   eliminarUsuario,
   obtenerAdmin,
   obtenerUsuariosAdmin,
-  crearAdministrador,
-  actualizarImagenAdmin,
   crearUsuario,
   actualizarImagenUsuario,
 } from "../../../helpers/peticiones/peticiones";
 import { expresiones } from "../../../helpers/expresionesRegulares";
 import { mensajesError } from "../../../helpers/mensajes/mensajes";
+import { toast } from "react-toastify";
+import { Spinner } from "../../spinner/spinner";
 
 export function Admin() {
   const [admin, setAdmin] = useState([]);
@@ -25,6 +25,8 @@ export function Admin() {
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState([]);
 
   const [modal, setModal] = useState(false);
+
+  const [spinner,setSpinner] = useState(false)
 
   const [modalEliminar, setModalEliminar] = useState(false);
 
@@ -62,10 +64,12 @@ export function Admin() {
   };
 
   const handleOnEliminarUsuario = async () => {
+
     const res = await eliminarUsuario(usuarioSeleccionado.uid, token);
 
     if (res.msg) {
-      alert(res.msg);
+      alert(res.msg)
+      //toast.success(res.msg)
     }
 
     window.location.reload(true);
@@ -102,24 +106,30 @@ export function Admin() {
     e.preventDefault();
 
     const body = { ...nuevoUsuario, administrador: id };
+
+    setSpinner(!spinner)
     const res = await crearUsuario(body);
 
     if (res.msg) {
-      return alert(res.msg);
+      setSpinner(false)
+      return toast.error(res.msg);
     }
+
     if (res && documento) {
       const file = new FormData();
       file.append("documento", documento[0]);
       const doc = await actualizarImagenUsuario(file, res.uid);
 
       if (!doc) {
-        alert("Problema al cargar imagen");
+         toast.error("Problema al cargar imagen")
       }
 
       if (doc.msg !== "Imagen Cargada con exito") {
-        alert(doc.msg);
+        toast.error(doc.msg)
       }
     }
+
+    setSpinner(!spinner)
 
     setModal(!modal);
 
@@ -229,6 +239,7 @@ export function Admin() {
             value="Registrar Usuario"
             className="button"
           />
+          <Spinner state={spinner}/>
         </Form>
       </Modal>
       <Modal

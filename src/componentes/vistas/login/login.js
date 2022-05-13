@@ -4,12 +4,16 @@ import "./login.css";
 import Input from "../../formulario/input"
 import img from "../../../assets/img.jpg"
 import { Form } from "../../formulario/form";
+import { Spinner } from "../../spinner/spinner";
 import { login } from "../../../helpers/peticiones/peticiones";
 import { expresiones } from "../../../helpers/expresionesRegulares";
 import {mensajesError} from "../../../helpers/mensajes/mensajes";
+import {toast} from "react-toastify"
 
 
 function Singin(props) {
+
+  const [spinner,setSpinner] = useState(false)
 
   const [administrador, setAdministrador] = useState({ nombre: "", correo: "" });
 
@@ -17,6 +21,8 @@ function Singin(props) {
     nombre: null,
     contraseña:null
   });
+
+  
 
 
 
@@ -27,12 +33,16 @@ function Singin(props) {
   const handleOnSubmit = async (e) => {
     e.preventDefault()
 
+    setSpinner(!spinner)
+
     const res = await login(administrador);
 
+    setSpinner(false)
+
     if(res.msg !=="Sesion iniciada"){
-      return alert(res.msg)
+      return toast.error(res.msg)
     }
-    
+
     localStorage.setItem("Administrador",res.administrador.id)
     localStorage.setItem("Token",res.token)
 
@@ -56,6 +66,7 @@ function Singin(props) {
         backgroundRepeat: "no-repeat",
       }}
     >
+      <Spinner state={spinner}/>
       <Form titulo="Inicia Sesion" mensaje={<Link className="link" to="/">¿No estas registrado? Registrate</Link>}>
         <Input
             name="correo"
