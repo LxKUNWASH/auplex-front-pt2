@@ -1,0 +1,16 @@
+.boton > button{
+    width: 100%;
+    height: 50px;
+    border-radius: 7px;
+    font-size: large;
+    font-weight: bold;
+    color: #fff;
+    background: #258;  
+    overflow: hidden;
+    cursor: pointer;
+   
+}
+
+.boton > button:hover{
+    background: #269;
+}

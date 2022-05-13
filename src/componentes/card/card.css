@@ -1,0 +1,29 @@
+
+
+.card{
+display: flex;
+flex-direction: column;
+width: 320px;
+height: 360px;
+background-color: #fff;
+opacity: 0.8;
+border-radius: 10px;
+z-index: 50;
+cursor: pointer;
+justify-content: center;
+align-self: start;
+box-shadow: 0 0 20px rgba(0,0,0,0.13);
+}
+
+ .content{
+    text-align: center;
+} 
+
+.img{
+    margin-top: 20px;
+    align-self: center;
+    border-radius: 200px;
+    width: 250px;
+    height: 250px;
+    
+}

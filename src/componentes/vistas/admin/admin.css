@@ -1,0 +1,137 @@
+body {
+  background-color: #e9ecf4;
+}
+.contenedor-usuarios {
+  display: grid;
+  grid-template-columns: minmax(min-content, 500px) minmax(min-content, 600px);
+  grid-template-rows: 1fr;
+  grid-template-areas: "perfil listado";
+  align-content: flex-start;
+  justify-items: center;
+  height: 100vh;
+  padding-top: 40px;
+}
+
+.perfil {
+  grid-area: perfil;
+}
+
+.boton {
+  margin-top: 10px;
+}
+
+.icono-añadir{
+cursor: pointer;
+color: #080;
+margin-left: 10px;
+
+}
+
+
+.boton > button {
+  width: 320px;
+  padding: 10px;
+  background-color: #800;
+  font-size: larger;
+  font-weight: 400;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+
+.boton-salir{
+    width: 30%;
+    padding: 10px;
+    background-color: #1a2537;
+    font-size: larger;
+    font-weight: 400;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.boton-eliminar{
+    width: 30%;
+    padding: 10px;
+    background-color: #800;
+    font-size: larger;
+    font-weight: 400;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.listado {
+  grid-area: listado;
+}
+
+.lista {
+  display: flex;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.listado .titulo {
+display: flex;
+align-items: center;
+justify-content: center;
+  text-align: center;
+}
+
+.listado .titulo > button{
+ margin-left: 5px;
+ padding: 5px;
+    }
+
+.usuario{
+    display: flex;
+    
+    height: 100px;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 8px;
+    
+}
+
+.img-usuario{
+    width: 90px;
+    height: 90px;
+    margin-right: 5px;
+    border-radius: 50px;
+    border: 3px solid rgba(200,200,200,.5);
+    
+}
+
+.icono-borrar {
+  margin-left: 5px;
+  color: #800;
+  cursor: pointer;
+}
+
+.icono-actualizar {
+    margin-left: 5px;
+    color: #088;
+    cursor: pointer;
+  }
+
+
+
+
+
+@media screen and (max-width: 760px) {
+  .contenedor-usuarios {
+    grid-template-columns: 100vw;
+    grid-template-areas:
+      "perfil"
+      "listado";
+  }
+
+  .lista{
+      font-size: 20px;
+  }
+
+}

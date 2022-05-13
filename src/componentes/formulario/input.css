@@ -1,0 +1,27 @@
+.input-contenedor{
+    display: grid;
+    grid-template-columns: min-content minmax(min-content,1fr);
+    grid-template-rows: minmax(min-content,1fr);
+    margin-bottom: 15px;
+    border: 1px solid #aaa;
+}
+
+.input-contenedor__input{
+    font-size: 20px;
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    justify-self: center;
+}
+
+.input-contenedor__input:focus{
+	outline:none;
+}
+
+.icon{
+        min-width: 50px;
+        text-align: center;
+        color: #999;
+        justify-self: end;
+        align-self: center;
+}

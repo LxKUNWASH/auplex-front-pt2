@@ -1,0 +1,48 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+
+
+
+.formulario{
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    background: #fff;
+    justify-content: center;
+    align-items: center;
+    padding: 13px;
+    border-radius: 2%;
+}
+
+.contenedor{
+    width: 100%;
+    padding: 15px;
+    }
+
+h1{
+    
+    text-align: center;
+    color: #1a2537;
+    font-size: 37px;
+}
+
+p{
+    text-align: center;
+}
+
+.mensaje{
+    color: #800;
+}
+
+@media screen and (max-width:550px) {
+    .formulario{
+        width: fit-content;
+    }
+}

@@ -1,0 +1,46 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+.link{
+    text-decoration: none;
+    color: #1a2537;
+}
+
+.fondo{
+    display: grid;
+    grid-template-columns: minmax(min-content,1fr);
+    align-items: center;
+    justify-items: center;
+    grid-template-rows: 1fr;
+    height: 100vh;
+    width: 100vw;
+}
+
+
+.button{
+    border: none;
+    width: 100%;
+    color: #fff;
+    font-size: 20px;
+    background-color: #1a2537;
+    opacity: 0.9;
+    padding: 15px 20px;
+    border-radius: 5px;
+    cursor:pointer;
+}
+
+.button:hover{
+    background-color: #248;
+}
+
+.button:valid{
+    background-color: #1a2537;
+    opacity: 1;
+}
+
