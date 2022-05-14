@@ -19,8 +19,6 @@ function Singin(props) {
 
   const [spinner,setSpinner] = useState(false)
 
-  const [loginAdmin,setLoginAdmin] = useState({})
-
   const [administrador, setAdministrador] = useState({ nombre: "", correo: "" });
 
   const [validaciones, setValidaciones] = useState({
@@ -46,40 +44,21 @@ function Singin(props) {
 
     const res = await crearAdministrador(administrador);
 
-    if (res.id){
-      setLoginAdmin(res)
+    if(res.msg){
+      setSpinner(false)
+      return toast.error(res.msg)
     }
 
-    if (res && documento) {
+    if (res.id && documento) {
       const file = new FormData();
       file.append("documento", documento[0]);
-       const doc = await actualizarImagenAdmin(file, loginAdmin?.id || res.id);
-
-       if (doc.msg === "La id debe ser de mongo") {
-        setSpinner(false)
-         return toast.error("Correo ya registrado o Formato de imagen incorrecto, soportadas: jpg,png,jpeg");
-        }
-
-       if(!doc){
-        setSpinner(false)
-        return toast.error("Problema al cargar imagen")
-      }
-
-       if(doc.msg !== "Imagen Cargada con exito" ){
-        setSpinner(false)
-         return toast.error("Formato de imagen incorrecto, soportadas: jpg,png,jpeg")
-    }
+       const doc = await actualizarImagenAdmin(file, res.id);
 
 }
 
       const body = { correo: administrador.correo, contraseña: administrador.contraseña };
 
-      const acceso = await login(body);
-
-        if(acceso.msg !=="Sesion iniciada"){
-          setSpinner(false)
-            return 
-        }
+      await login(body);
       
         window.location.replace("/admin");
     
