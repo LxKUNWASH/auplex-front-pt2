@@ -53,7 +53,7 @@ function Singin(props) {
     if (res && documento) {
       const file = new FormData();
       file.append("documento", documento[0]);
-       const doc = await actualizarImagenAdmin(file, loginAdmin?.id);
+       const doc = await actualizarImagenAdmin(file, loginAdmin?.id || res.id);
 
        if (doc.msg === "La id debe ser de mongo") {
         setSpinner(false)
