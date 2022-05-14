@@ -12,10 +12,14 @@ import {
 } from "../../../helpers/peticiones/peticiones";
 import { expresiones } from "../../../helpers/expresionesRegulares";
 import {mensajesError} from "../../../helpers/mensajes/mensajes";
+import { toast } from "react-toastify";
+
 
 function Singin(props) {
 
   const [spinner,setSpinner] = useState(false)
+
+  const [loginAdmin,setLoginAdmin] = useState({})
 
   const [administrador, setAdministrador] = useState({ nombre: "", correo: "" });
 
@@ -42,40 +46,41 @@ function Singin(props) {
 
     const res = await crearAdministrador(administrador);
 
-    if (res.msg) {
-      setSpinner(false)
-      return alert(res.msg);
+    if (res.id){
+      setLoginAdmin(res)
     }
+
     if (res && documento) {
       const file = new FormData();
       file.append("documento", documento[0]);
-       const doc = await actualizarImagenAdmin(file, res.id);
+       const doc = await actualizarImagenAdmin(file, loginAdmin?.id);
 
-       
+       if (doc.msg === "La id debe ser de mongo") {
+        setSpinner(false)
+         return toast.error("Correo ya registrado o Formato de imagen incorrecto, soportadas: jpg,png,jpeg");
+        }
 
        if(!doc){
         setSpinner(false)
-        return alert("Problema al cargar imagen")
+        return toast.error("Problema al cargar imagen")
       }
 
-       if(doc.msg !== "Imagen Cargada con exito"){
+       if(doc.msg !== "Imagen Cargada con exito" ){
         setSpinner(false)
-         return alert(doc.msg)
+         return toast.error("Formato de imagen incorrecto, soportadas: jpg,png,jpeg")
     }
-  }
+
+}
 
       const body = { correo: administrador.correo, contraseña: administrador.contraseña };
 
       const acceso = await login(body);
 
-     
         if(acceso.msg !=="Sesion iniciada"){
-            return alert(acceso.msg)
+          setSpinner(false)
+            return 
         }
       
-     
-        localStorage.setItem("Administrador", acceso.administrador.id);
-        localStorage.setItem("Token", acceso.token);
         window.location.replace("/admin");
     
   };

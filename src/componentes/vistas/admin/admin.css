@@ -103,6 +103,7 @@ justify-content: center;
     margin-right: 5px;
     border-radius: 50px;
     border: 3px solid rgba(200,200,200,.5);
+    cursor: pointer;
     
 }
 
@@ -118,6 +119,14 @@ justify-content: center;
     cursor: pointer;
   }
 
+  .titulo-data{
+    font-size: 30px;
+    margin: 10px;
+  }
+.data{
+  font-size: 20px;
+  margin: 5px;
+}
 
 
 
@@ -131,7 +140,12 @@ justify-content: center;
   }
 
   .lista{
-      font-size: 20px;
+      font-size: 16px;
+  }
+
+  .data{
+    font-size: 16px;
+    margin: 5px;
   }
 
 }

@@ -1,6 +1,9 @@
+import { obtenerUsuariosStore,crearUsuarioStore, eliminarUsuarioStore, actualizarUsuarioStore } from "../../store/actions";
+import { ACTIONS } from "../../actions/actions";
+
 const url = `https://au-restserver.herokuapp.com/api/`
 
-export const login = async (body) => {
+export const login = async (body,dispatch) => {
   try {
     const res = await fetch(`${url}auth`, {
       headers: {
@@ -11,13 +14,24 @@ export const login = async (body) => {
       body: JSON.stringify(body),
     });
     const response = await res.json();
+      localStorage.removeItem("Sesion");
+      localStorage.removeItem("Token")
+      localStorage.setItem("Sesion", JSON.stringify(response));
+      localStorage.setItem("Token",response.token)
     return response;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const crearUsuario = async (body) => {
+export const guardarSesion = (sesion,dispatch)=>{
+  dispatch({
+    type:ACTIONS.LOGIN_ACTION,
+    payload:sesion
+  })
+}
+
+export const crearUsuario = async (body,dispatch) => {
   try {
     const res = await fetch(`${url}usuarios`, {
       headers: {
@@ -28,6 +42,7 @@ export const crearUsuario = async (body) => {
       body: JSON.stringify(body),
     });
     const response = await res.json();
+    dispatch(crearUsuarioStore(response))
     return response;
   } catch (error) {
     console.log(error);
@@ -51,13 +66,14 @@ export const actualizarUsuario = async (body,id) => {
   }
 };
 
-  export const actualizarImagenUsuario = async (body,id) => {
+  export const actualizarImagenUsuario = async (body,id,dispatch) => {
     try {
       const res = await fetch(`${url}uploads/usuarios/usuario/${id}`, {
         method: "PUT",
         body,
       });
       const response = await res.json();
+    dispatch(actualizarUsuarioStore(response.modelo))
       return response;
     } catch (error) {
       console.log(error);
@@ -85,7 +101,7 @@ export const actualizarUsuario = async (body,id) => {
   };
 
 
-  export const eliminarUsuario = async (id,token) => {
+  export const eliminarUsuario = async (id,token,dispatch) => {
     try {
       const res = await fetch(`${url}usuarios/${id}`,
       {
@@ -95,6 +111,7 @@ export const actualizarUsuario = async (body,id) => {
           method: "DELETE"
       })
       const response = await res.json();
+      dispatch(eliminarUsuarioStore())
       return response;
     } catch (error) {
       console.log(error);
@@ -129,10 +146,11 @@ export const actualizarUsuario = async (body,id) => {
     }
   };
 
-  export const obtenerUsuariosAdmin = async (id) => {
+  export const obtenerUsuariosAdmin = async (id,dispatch) => {
     try {
       const res = await fetch(`${url}busquedas/usuarios/${id}`);
       const response = await res.json();
+      dispatch((obtenerUsuariosStore(response)))
       return response;
     } catch (error) {
       console.log(error);

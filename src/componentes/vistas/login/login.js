@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch } from 'react-redux'
 import { Link  } from 'react-router-dom';
 import "./login.css";
 import Input from "../../formulario/input"
@@ -10,8 +11,9 @@ import { expresiones } from "../../../helpers/expresionesRegulares";
 import {mensajesError} from "../../../helpers/mensajes/mensajes";
 import {toast} from "react-toastify"
 
-
 function Singin(props) {
+
+  const dispatch = useDispatch();
 
   const [spinner,setSpinner] = useState(false)
 
@@ -22,30 +24,24 @@ function Singin(props) {
     contraseña:null
   });
 
-  
-
-
 
   const handleOnChange = (e) => {
     setAdministrador({ ...administrador, [e.target.name]: e.target.value });
   };
 
-  const handleOnSubmit = async (e) => {
+  const handleOnSubmit = async(e) => {
     e.preventDefault()
 
     setSpinner(!spinner)
 
-    const res = await login(administrador);
+    const res = await login(administrador,dispatch);
 
     setSpinner(false)
 
-    if(res.msg !=="Sesion iniciada"){
+    if(res.msg !=="Sesion iniciada" ){
       return toast.error(res.msg)
     }
-
-    localStorage.setItem("Administrador",res.administrador.id)
-    localStorage.setItem("Token",res.token)
-
+  
     window.location.replace('/admin');
 
   };

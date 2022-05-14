@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux'
 import "./admin.css";
 import { Card } from "../../card/card";
 import placeholder from "../../../assets/placeholder.jpg";
@@ -11,24 +12,31 @@ import {
   obtenerUsuariosAdmin,
   crearUsuario,
   actualizarImagenUsuario,
+  guardarSesion,
 } from "../../../helpers/peticiones/peticiones";
 import { expresiones } from "../../../helpers/expresionesRegulares";
 import { mensajesError } from "../../../helpers/mensajes/mensajes";
 import { toast } from "react-toastify";
 import { Spinner } from "../../spinner/spinner";
+import { obtenerUsuarioSelStore } from "../../../store/actions";
+
 
 export function Admin() {
-  const [admin, setAdmin] = useState([]);
 
-  const [usuarios, setUsuarios] = useState([]);
+  const {usuarios, usuarioSeleccionado} = useSelector((state)=>(state))
+  const dispatch = useDispatch()
 
-  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState([]);
+  const sesion = localStorage.getItem("Sesion");
+
+  const {administrador} = JSON.parse(sesion)
 
   const [modal, setModal] = useState(false);
 
   const [spinner,setSpinner] = useState(false)
 
   const [modalEliminar, setModalEliminar] = useState(false);
+
+  const [modalDetalle, setModalDetalle] = useState(false)
 
   const [nuevoUsuario, setNuevosUsuario] = useState({ nombre: "", correo: "" });
 
@@ -39,10 +47,9 @@ export function Admin() {
     correo: null,
     telefono: null,
   });
-
-  const id = localStorage.getItem("Administrador");
+  
   const token = localStorage.getItem("Token");
-
+  
   if (!token) {
     if (token.length < 4) {
       window.location.replace("/");
@@ -50,29 +57,29 @@ export function Admin() {
   }
 
   useEffect(() => {
-    obtenerAdmin(id).then((res) => setAdmin(res));
-  }, []);
-
-  useEffect(() => {
-    obtenerUsuariosAdmin(id).then((res) => setUsuarios(res));
+    obtenerUsuariosAdmin(administrador.id,dispatch)
   }, [usuarios.length]);
 
   const handleOnclick = (u) => {
     setModalEliminar(!modalEliminar);
+    dispatch(obtenerUsuarioSelStore(u))
+  };
 
-    setUsuarioSeleccionado(u);
+  const handleOnDetail = (u) => {
+    setModalDetalle(!modalDetalle);
+    dispatch(obtenerUsuarioSelStore(u))
   };
 
   const handleOnEliminarUsuario = async () => {
 
-    const res = await eliminarUsuario(usuarioSeleccionado.uid, token);
+    const res = await eliminarUsuario(usuarioSeleccionado.uid, token,dispatch);
 
     if (res.msg) {
-      alert(res.msg)
-      //toast.success(res.msg)
+      toast.success(res.msg)
     }
 
-    window.location.reload(true);
+    setModalEliminar(false)
+    
   };
 
   const handleOnUsuario = () => {
@@ -105,10 +112,10 @@ export function Admin() {
   const handleOnSubmit = async (e) => {
     e.preventDefault();
 
-    const body = { ...nuevoUsuario, administrador: id };
+    const body = { ...nuevoUsuario, administrador: administrador.id };
 
     setSpinner(!spinner)
-    const res = await crearUsuario(body);
+    const res = await crearUsuario(body,dispatch);
 
     if (res.msg) {
       setSpinner(false)
@@ -118,7 +125,7 @@ export function Admin() {
     if (res && documento) {
       const file = new FormData();
       file.append("documento", documento[0]);
-      const doc = await actualizarImagenUsuario(file, res.uid);
+      const doc = await actualizarImagenUsuario(file, res.uid,dispatch);
 
       if (!doc) {
          toast.error("Problema al cargar imagen")
@@ -129,11 +136,12 @@ export function Admin() {
       }
     }
 
-    setSpinner(!spinner)
+    setSpinner(false)
 
     setModal(!modal);
 
-    window.location.reload(true);
+    
+   
   };
 
   const validarFormulario = () => {
@@ -144,6 +152,15 @@ export function Admin() {
 
   return (
     <div className="contenedor-usuarios">
+      <Modal state={modalDetalle} setState={setModalDetalle} titulo={usuarioSeleccionado?.nombre}>
+        <div className="titulo-data">Datos de contacto: </div>
+        <div className="data">
+        Telefono: {usuarioSeleccionado?.telefono}
+        </div>
+        <div className="data">
+        Correo: {usuarioSeleccionado?.correo}
+        </div>
+      </Modal>
       <Modal state={modal} setState={setModal}>
         <Form titulo="Agregar Usuario">
           <Input
@@ -258,10 +275,10 @@ export function Admin() {
         }
       >
         {" "}
-        ¿Esta seguro?{" "}
+        <p className="data">¿Esta seguro?</p>{" "}
       </Modal>
       <div className="perfil">
-        <Card nombre={admin.nombre} descripcion={admin.rol} img={admin.img} />
+      <Card nombre={administrador.nombre} descripcion={administrador.rol} img={administrador.img} />
         <div className="boton">
           <button onClick={handleCerrarSesion}>Cerrar Sesion</button>
         </div>
@@ -293,7 +310,7 @@ export function Admin() {
                 return (
                   <li key={u.uid} className="usuario">
                     {" "}
-                    <img className="img-usuario" src={u.img || placeholder} />
+                    <img className="img-usuario" src={u.img || placeholder} onClick={()=>handleOnDetail(u)} />
                     <div>{u.nombre}</div>
                     <div>
                       <svg
