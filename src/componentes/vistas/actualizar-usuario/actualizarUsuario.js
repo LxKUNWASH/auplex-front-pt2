@@ -12,10 +12,15 @@ import {
 import { expresiones } from "../../../helpers/expresionesRegulares";
 import { mensajesError } from "../../../helpers/mensajes/mensajes";
 import { Spinner } from "../../spinner/spinner";
+import { useDispatch } from "react-redux";
+
+
 
 function ActualizarUsuario(props) {
 
-  const [usuario, setUsuario] = useState({ nombre: "", correo:"",telefono:"" });
+  const dispatch = useDispatch()
+
+  const [usuario, setUsuario] = useState({nombre:"",correo:"",telefono:""});
 
   const [spinner, setSpinner] = useState(false);
 
@@ -39,9 +44,10 @@ function ActualizarUsuario(props) {
     const uid = localStorage.getItem("uidActualizar");
 
     if (documento) {
+      
       const file = new FormData();
       file.append("documento", documento[0]);
-      const doc = await actualizarImagenUsuario(file, uid);
+      const doc = await actualizarImagenUsuario(file, uid,dispatch);
       setSpinner(false);
       if (doc.msg !== "Imagen Cargada con exito") {
         return toast.error(doc.msg);
@@ -55,7 +61,7 @@ function ActualizarUsuario(props) {
         return toast.error(mensajesError.nombre)
       }
 
-      const res = await actualizarUsuario(usuario, uid);
+      const res = await actualizarUsuario({nombre:usuario.nombre}, uid);
         setSpinner(false);
         if (res.msg !== "Usuario actualizado") {
           return toast.error(res.msg);
@@ -65,12 +71,12 @@ function ActualizarUsuario(props) {
 
       if(usuario.correo.length>0){
 
-        if(!validaciones.telefono){
+        if(!validaciones.correo){
           setSpinner(false);
-          return toast.error(mensajesError.telefono)
+          return toast.error(mensajesError.correo)
         }
 
-        const res = await actualizarUsuario(usuario, uid);
+        const res = await actualizarUsuario({correo:usuario.correo}, uid);
         setSpinner(false);
         if (res.msg !== "Usuario actualizado") {
           return toast.error(res.msg);
@@ -79,18 +85,21 @@ function ActualizarUsuario(props) {
       }
 
       if(usuario.telefono.length>0){
-        if(!validaciones.correo){
+        if(!validaciones.telefono){
           setSpinner(false);
-          return toast.error(mensajesError.correo)
+          return toast.error(mensajesError.telefono)
         }
 
-        const res = await actualizarUsuario(usuario, uid);
+    
+        const res = await actualizarUsuario({telefono:usuario.telefono}, uid);
         setSpinner(false);
         if (res.msg !== "Usuario actualizado") {
           return toast.error(res.msg);
         }
 
       }
+
+
     localStorage.removeItem("uidActualizar");
     window.location.replace("/admin");
   };
