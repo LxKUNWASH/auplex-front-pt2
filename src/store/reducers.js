@@ -1,19 +1,29 @@
 import { ACTIONS } from "../actions/actions";
 
+const sesion = localStorage.getItem("Sesion")
+const admin = JSON.parse(sesion)
+
 const initialState = {
-    administrador: undefined,
+    administrador: admin?.administrador,
     usuarios: [],
     usuarioSeleccionado:undefined
   };
 
 
 export const stateReducer =  (state = initialState, action) => {
+  console.log(state.administrador)
     switch (action.type) {
       case ACTIONS.LOGIN_ACTION:
         return {
           ...state,
           administrador: action.payload
         };
+
+        case ACTIONS.UPDATE_ADMIN:
+          return {
+            ...state,
+            administrador: action.payload
+          };
   
       case ACTIONS.GET_USERS:
           return{
@@ -30,7 +40,6 @@ export const stateReducer =  (state = initialState, action) => {
           case ACTIONS.UPDATE_USER:
             const id = action.payload.uid
             const updatedUser = state.usuarios.filter((usuario)=>usuario.uid === id)
-            console.log(updatedUser)
             return{
                 ...state,
                 usuarios: [...state.usuarios,updatedUser]
@@ -44,7 +53,6 @@ export const stateReducer =  (state = initialState, action) => {
               usuarios: array
             }
 
-          
   
           case ACTIONS.GET_SELECTED_USER:
           return{

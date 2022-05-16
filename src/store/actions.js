@@ -7,17 +7,17 @@ export const obtenerUsuariosStore = (usuarios)=>{
     }
 }
 
-export const guardarSesion = (sesion)=>{
-return{
-    type:ACTIONS.LOGIN_ACTION,
-    payload:sesion
-}
-}
-
 export const obtenerUsuario = (usuario)=>{
     return{
         type:ACTIONS.GET_SELECTED_USER,
         payload:usuario
+    }
+} 
+
+export const ActualizarAdminStore = (admin)=>{
+    return{
+        type:ACTIONS.UPDATE_ADMIN,
+        payload:admin
     }
 } 
 

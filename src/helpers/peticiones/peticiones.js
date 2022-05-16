@@ -1,4 +1,4 @@
-import { obtenerUsuariosStore,crearUsuarioStore, eliminarUsuarioStore, actualizarUsuarioStore } from "../../store/actions";
+import { obtenerUsuariosStore,crearUsuarioStore, eliminarUsuarioStore, actualizarUsuarioStore, guardarSesionStore, ActualizarAdminStore } from "../../store/actions";
 import { ACTIONS } from "../../actions/actions";
 
 const url = `https://au-restserver.herokuapp.com/api/`
@@ -24,12 +24,7 @@ export const login = async (body,dispatch) => {
   }
 };
 
-export const guardarSesion = (sesion,dispatch)=>{
-  dispatch({
-    type:ACTIONS.LOGIN_ACTION,
-    payload:sesion
-  })
-}
+
 
 export const crearUsuario = async (body,dispatch) => {
   try {
@@ -157,13 +152,14 @@ export const actualizarUsuario = async (body,id) => {
     }
   };
 
-  export const actualizarImagenAdmin = async (body,id) => {
+  export const actualizarImagenAdmin = async (body,id,dispatch) => {
     try {
       const res = await fetch(`${url}uploads/administradores/administrador/${id}`, {
         method: "PUT",
         body,
       });
       const response = await res.json();
+      dispatch(ActualizarAdminStore(response.modelo))
       return response;
     } catch (error) {
       console.log(error);

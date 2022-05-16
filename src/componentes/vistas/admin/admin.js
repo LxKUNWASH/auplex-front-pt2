@@ -12,7 +12,7 @@ import {
   obtenerUsuariosAdmin,
   crearUsuario,
   actualizarImagenUsuario,
-  guardarSesion,
+  actualizarImagenAdmin,
 } from "../../../helpers/peticiones/peticiones";
 import { expresiones } from "../../../helpers/expresionesRegulares";
 import { mensajesError } from "../../../helpers/mensajes/mensajes";
@@ -23,12 +23,12 @@ import { obtenerUsuarioSelStore } from "../../../store/actions";
 
 export function Admin() {
 
-  const {usuarios, usuarioSeleccionado} = useSelector((state)=>(state))
   const dispatch = useDispatch()
-
-  const sesion = localStorage.getItem("Sesion");
-
-  const {administrador} = JSON.parse(sesion)
+  
+ 
+  const {administrador,usuarios, usuarioSeleccionado} = useSelector((state)=>(state))
+  
+ 
 
   const [modal, setModal] = useState(false);
 
@@ -47,6 +47,8 @@ export function Admin() {
     correo: null,
     telefono: null,
   });
+
+
   
   const token = localStorage.getItem("Token");
   
@@ -55,6 +57,7 @@ export function Admin() {
       window.location.replace("/");
     }
   }
+
 
   useEffect(() => {
     obtenerUsuariosAdmin(administrador.id,dispatch)
@@ -103,11 +106,34 @@ export function Admin() {
 
   const handleOnDocument = (e) => {
     setDocumento(e.target.files);
+    
   };
 
   const handleOnSalir = (e) => {
     setModalEliminar(!modalEliminar);
   };
+
+  const handleOnImage = async (e)=>{
+    
+    const imagen = e.target.files
+
+    if(!imagen[0]){
+      return
+    }
+
+      const file = new FormData();
+      file.append("documento", imagen[0]);
+      
+      const doc =  await actualizarImagenAdmin(file, administrador.id,dispatch)
+
+
+      if (doc.msg !== "Imagen Cargada con exito") {
+        return toast.error(doc.msg)
+      }
+
+      toast.success(doc.msg)
+
+  }
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
@@ -140,7 +166,6 @@ export function Admin() {
 
     setModal(!modal);
 
-    
    
   };
 
@@ -278,7 +303,7 @@ export function Admin() {
         <p className="data">¿Esta seguro?</p>{" "}
       </Modal>
       <div className="perfil">
-      <Card nombre={administrador.nombre} descripcion={administrador.rol} img={administrador.img} />
+      <Card nombre={administrador?.nombre} descripcion={administrador?.rol} img={administrador?.img} handler={handleOnImage}/>
         <div className="boton">
           <button onClick={handleCerrarSesion}>Cerrar Sesion</button>
         </div>

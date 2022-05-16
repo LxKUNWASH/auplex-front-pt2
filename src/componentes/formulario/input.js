@@ -2,7 +2,7 @@ import "./input.css";
 
 function Input(props) {
 
-  const { type="text",placeholder, children,onChange,name,estadoValidacion,actualizarValidacion,estado,expresionValidar,value} = props;
+  const { type="text",placeholder, children,onChange,name,estadoValidacion,actualizarValidacion,estado,expresionValidar,value,accept} = props;
   
   const validar = () => {
     if (expresionValidar) {
@@ -25,6 +25,7 @@ function Input(props) {
         placeholder={placeholder}
         onChange={onChange}
         value={value}
+        accept={accept}
         className="input-contenedor__input"
         onBlur={validar}
         onKeyUp={validar}
