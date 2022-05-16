@@ -29,8 +29,6 @@ export function Admin() {
  
   const {administrador,usuarios, usuarioSeleccionado} = useSelector((state)=>(state))
   
- 
-
   const [modal, setModal] = useState(false);
 
   const [spinner,setSpinner] = useState(false)

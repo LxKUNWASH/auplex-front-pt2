@@ -162,6 +162,9 @@ export const actualizarUsuario = async (body,id) => {
         body,
       });
       const response = await res.json();
+      localStorage.removeItem("Sesion");
+      const administrador={administrador:response.modelo}
+      localStorage.setItem("Sesion", JSON.stringify(administrador));
       dispatch(ActualizarAdminStore(response.modelo))
       return response;
     } catch (error) {
