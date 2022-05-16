@@ -13,6 +13,7 @@ import { expresiones } from "../../../helpers/expresionesRegulares";
 import { mensajesError } from "../../../helpers/mensajes/mensajes";
 import { Spinner } from "../../spinner/spinner";
 import { useDispatch } from "react-redux";
+import {validarImg} from "../../../helpers/validaciones/validar-extension-img"
 
 
 
@@ -44,14 +45,16 @@ function ActualizarUsuario(props) {
     const uid = localStorage.getItem("uidActualizar");
 
     if (documento) {
-      
+
+      if(!validarImg(documento)){
+        setSpinner(false)
+        return
+      }
       const file = new FormData();
       file.append("documento", documento[0]);
-      const doc = await actualizarImagenUsuario(file, uid,dispatch);
+       await actualizarImagenUsuario(file, uid,dispatch);
       setSpinner(false);
-      if (doc.msg !== "Imagen Cargada con exito") {
-        return toast.error(doc.msg);
-      }
+      
     }
 
     if (usuario.nombre.length>0) {

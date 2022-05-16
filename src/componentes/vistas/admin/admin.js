@@ -19,6 +19,7 @@ import { mensajesError } from "../../../helpers/mensajes/mensajes";
 import { toast } from "react-toastify";
 import { Spinner } from "../../spinner/spinner";
 import { obtenerUsuarioSelStore } from "../../../store/actions";
+import { validarImg } from "../../../helpers/validaciones/validar-extension-img";
 
 
 export function Admin() {
@@ -117,7 +118,12 @@ export function Admin() {
     
     const imagen = e.target.files
 
+    
     if(!imagen[0]){
+      return
+    }
+
+    if(!validarImg(imagen)){
       return
     }
 
@@ -125,11 +131,6 @@ export function Admin() {
       file.append("documento", imagen[0]);
       
       const doc =  await actualizarImagenAdmin(file, administrador.id,dispatch)
-
-
-      if (doc.msg !== "Imagen Cargada con exito") {
-        return toast.error(doc.msg)
-      }
 
       toast.success(doc.msg)
 
@@ -149,17 +150,15 @@ export function Admin() {
     }
 
     if (res && documento) {
+      if(!validarImg(documento)){
+        setSpinner(false)
+        setModal(false);
+        return
+      }
       const file = new FormData();
       file.append("documento", documento[0]);
-      const doc = await actualizarImagenUsuario(file, res.uid,dispatch);
+      await actualizarImagenUsuario(file, res.uid,dispatch);
 
-      if (!doc) {
-         toast.error("Problema al cargar imagen")
-      }
-
-      if (doc.msg !== "Imagen Cargada con exito") {
-        toast.error(doc.msg)
-      }
     }
 
     setSpinner(false)
@@ -261,7 +260,7 @@ export function Admin() {
           {validaciones.telefono === false && (
             <p className="mensaje">{mensajesError.telefono} </p>
           )}
-          <Input name="img" type="file" onChange={handleOnDocument}>
+          <Input name="img" type="file" onChange={handleOnDocument} accept="image/*">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"

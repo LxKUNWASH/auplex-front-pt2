@@ -37,6 +37,9 @@ export const crearUsuario = async (body,dispatch) => {
       body: JSON.stringify(body),
     });
     const response = await res.json();
+    if(response.msg){
+      return response
+    }
     dispatch(crearUsuarioStore(response))
     return response;
   } catch (error) {

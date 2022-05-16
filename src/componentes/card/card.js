@@ -15,7 +15,7 @@ const handleOnClick = ()=>{
     
     <div className="card" >
       <div className="img">
-      <input id="input" type="file" ref={inputRef} style={{display:"none"}} onChange={handler} />
+      <input id="input" type="file" ref={inputRef} style={{display:"none"}} onChange={handler} accept="image/*" />
         <img className="img" src={img} onClick={handleOnClick}/>
       </div>
       <div className="content">

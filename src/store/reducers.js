@@ -11,7 +11,6 @@ const initialState = {
 
 
 export const stateReducer =  (state = initialState, action) => {
-  console.log(state.administrador)
     switch (action.type) {
       case ACTIONS.LOGIN_ACTION:
         return {
